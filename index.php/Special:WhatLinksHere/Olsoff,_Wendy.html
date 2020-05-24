@@ -19,6 +19,11 @@ mw.config.set({"wgCanonicalNamespace":"Special","wgCanonicalSpecialPageName":"Wh
 
 
 <link rel="copyright" href="http://www.nyu.edu/library/bobst/research/fales/" />
+<style>
+#p-search{
+	max-width: 300px
+}
+</style>
 
 
 </head>
@@ -149,7 +154,7 @@ mw.config.set({"wgCanonicalNamespace":"Special","wgCanonicalSpecialPageName":"Wh
 				/>
 									</div>
 										
-			<!--<div id="left-navigation">
+			<div id="left-navigation">
 													<div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
 						<h5 id="p-namespaces-label">Namespaces</h5>
 						<ul>
@@ -201,7 +206,8 @@ mw.config.set({"wgCanonicalNamespace":"Special","wgCanonicalSpecialPageName":"Wh
 								<label for="searchInput">Search</label>
 							</h5>
 
-							<form action="https://cs.nyu.edu/ArtistArchives/KnowledgeBase/index.php" id="searchform">
+							<div class="gcse-searchbox-only"><!--</div><form action="https://cs.nyu.edu/ArtistArchives/KnowledgeBase/index.php" id="searchform">
+
 								<div
 									 id="simpleSearch"								>
 								<input type="search" name="search" placeholder="Search" title="Search David Wojnarowicz Knowledge Base [f]" accesskey="f" id="searchInput" /><input type="hidden" value="Special:Search" name="title" /><input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton" /><input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton" />								</div>
