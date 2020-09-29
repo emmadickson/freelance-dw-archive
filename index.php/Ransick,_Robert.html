@@ -10,7 +10,6 @@ mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgName
 <link rel="stylesheet" href="../load.php%3Fdebug=false&amp;lang=en&amp;modules=mediawiki.helplink,sectionAnchor|mediawiki.legacy.commonPrint,shared|mediawiki.skinning.interface|skins.metrolook.styles.responsive&amp;only=styles&amp;skin=metrolook.css" />
 <meta name="ResourceLoaderDynamicStyles" content="" />
 <link rel="stylesheet" href="../load.php%3Fdebug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=metrolook.css" />
-<script async src="https://cse.google.com/cse.js?cx=004565102959959190228:8daxpkrwjiu"></script>
 
 <script async="" src="../load.php%3Fdebug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=metrolook"></script>
 
@@ -20,9 +19,10 @@ mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgName
 
 <link rel="copyright" href="http://www.nyu.edu/library/bobst/research/fales/" />
 <style>
-#right-navigation{
+ #right-navigation{
 	max-width: 300px; padding-top: 5px;
 }
+#search-input{ margin: 5px}
 </style>
 
 
@@ -199,22 +199,29 @@ Transclusion expansion time report (%,ms,calls,template)
 
 
 			--><div id="right-navigation">
-															 
-							<h5>
-								
-							</h5>
+<script> 
+function httpGet(theUrl)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+function logSubmit(event) {
+  console.log(this)
+	textValue = (document.getElementById('search-input').value)
+	t = httpGet('https://www.googleapis.com/customsearch/v1?key=AIzaSyB2e0a8LaJ7atvYrmpqxQn2yoihyTBhimw&cx=004565102959959190228:8daxpkrwjiu&q='+ textValue)
+  console.log(t)
+	event.preventDefault();
+}
+const form = document.getElementById('search-box');
 
-							 <div class="gcse-searchbox-only"></div></div><!--</div><form action="https://cs.nyu.edu/ArtistArchives/KnowledgeBase/index.php" id="searchform">
+<form id="search-box" action="http://localhost:3000/index.php/Search_Page.html" method="get" >
 
-								<div
-									 id="simpleSearch"								>
-								<input type="search" name="search" placeholder="Search" title="Search David Wojnarowicz Knowledge Base [f]" accesskey="f" id="searchInput" /><input type="hidden" value="Special:Search" name="title" /><input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton" /><input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton" />								</div>
-							--></form>
-						</div>
-													</div>
-		</div>
-
-							<div id="mw-panel">
+<input id='search-input' name="q" type="text">
+<button type="submit">Send</button>
+</form></div>
+<div id="mw-panel">
 															<div class="portal" role="navigation" id='p-navigation' aria-labelledby='p-navigation-label'>
 				<h5 id='p-navigation-label'>Navigation</h5>
 									<div class="body">
@@ -275,5 +282,5 @@ Transclusion expansion time report (%,ms,calls,template)
 mw.loader.state({"user":"ready","user.groups":"ready"});mw.loader.load(["mediawiki.action.view.postEdit","site","mediawiki.user","mediawiki.hidpi","mediawiki.page.ready","mediawiki.searchSuggest"]);
 } );</script><script>window.RLQ = window.RLQ || []; window.RLQ.push( function () {
 mw.config.set({"wgBackendResponseTime":137});
-} );</script>	</body>
+} );</script> </body>
 </html>

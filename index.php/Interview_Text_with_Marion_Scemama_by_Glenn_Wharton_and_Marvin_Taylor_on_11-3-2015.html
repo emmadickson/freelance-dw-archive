@@ -62,8 +62,7 @@
     <link rel="stylesheet" href="../load.php%3Fdebug=false&amp;lang=en&amp;modules=mediawiki.legacy.commonPrint,shared|mediawiki.sectionAnchor|mediawiki.skinning.interface|skins.metrolook.styles.responsive&amp;only=styles&amp;skin=metrolook.css" />
     <meta name="ResourceLoaderDynamicStyles" content="" />
     <link rel="stylesheet" href="../load.php%3Fdebug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=metrolook.css" />
-    <script async src="https://cse.google.com/cse.js?cx=004565102959959190228:8daxpkrwjiu"></script>
-
+    
     <script async="" src="../load.php%3Fdebug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=metrolook"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -545,7 +544,24 @@ Transclusion expansion time report (%,ms,calls,template)
             });
 
         </script>
-</body>
+<script> 
+function httpGet(theUrl)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+function logSubmit(event) {
+  console.log(this)
+	textValue = (document.getElementById('search-input').value)
+	t = httpGet('https://www.googleapis.com/customsearch/v1?key=AIzaSyB2e0a8LaJ7atvYrmpqxQn2yoihyTBhimw&cx=004565102959959190228:8daxpkrwjiu&q='+ textValue)
+  console.log(t)
+	event.preventDefault();
+}
+const form = document.getElementById('search-box');
+
+form.addEventListener('submit', logSubmit);</script></body>
 <!-- Cached 20170524145150 -->
 
 </html>

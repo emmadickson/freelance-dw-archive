@@ -5,5 +5,22 @@
 <body>
     <h3><a href="http://artistarchives.hosting.nyu.edu/DavidWojnarowicz/KnowledgeBase/index.php/Main_Page.html">David Wojnarowicz Knowledge Base </a></h3>
 <hr />
-</body>
+<script> 
+function httpGet(theUrl)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+function logSubmit(event) {
+  console.log(this)
+	textValue = (document.getElementById('search-input').value)
+	t = httpGet('https://www.googleapis.com/customsearch/v1?key=AIzaSyB2e0a8LaJ7atvYrmpqxQn2yoihyTBhimw&cx=004565102959959190228:8daxpkrwjiu&q='+ textValue)
+  console.log(t)
+	event.preventDefault();
+}
+const form = document.getElementById('search-box');
+
+form.addEventListener('submit', logSubmit);</script></body>
 </html>

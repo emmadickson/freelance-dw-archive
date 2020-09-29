@@ -10,8 +10,6 @@ mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgName
 <link rel="stylesheet" href="../load.php%3Fdebug=false&amp;lang=en&amp;modules=mediawiki.legacy.commonPrint,shared|mediawiki.sectionAnchor|mediawiki.skinning.interface|skins.metrolook.styles.responsive&amp;only=styles&amp;skin=metrolook.css" />
 <meta name="ResourceLoaderDynamicStyles" content="" />
 <link rel="stylesheet" href="../load.php%3Fdebug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=metrolook.css" />
-<script async src="https://cse.google.com/cse.js?cx=004565102959959190228:8daxpkrwjiu"></script>
-<script async src="https://cse.google.com/cse.js?cx=004565102959959190228:8daxpkrwjiu"></script>
 <script async="" src="../load.php%3Fdebug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=metrolook"></script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,17 +18,47 @@ mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgName
 
 <link rel="copyright" href="http://www.nyu.edu/library/bobst/research/fales/" />
 <style>
-#right-navigation{
+#results-list{
+	list-style-type:none
+}
+ #right-navigation{
 	max-width: 300px; padding-top: 5px;
 }
+#search-input{ margin: 5px}
 </style>
 <style>
-#right-navigation{
+ #right-navigation{
 	max-width: 300px; padding-top: 5px;
 }
+#search-input{ margin: 5px}
 div#mw-panel {
 	width:10em !important;
 }
+.center {
+  text-align: center;
+}
+
+.pagination {
+  display: inline-block;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+  margin: 0 4px;
+}
+
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
 </style>
 </head>
 <body class="mediawiki ltr sitedir-ltr ns-0 ns-subject page-Main_Page skin-metrolook action-view">
@@ -49,7 +77,7 @@ div#mw-panel {
 												<div id="jump-to-nav" class="mw-jump">
 					Jump to:					<a href="Main_Page.html#mw-head">navigation</a>, 											<a href="Main_Page.html#p-search">search</a>
 									</div>
-					<div class="gcse-searchresults-only"></div>
+			
 <!-- 
 NewPP limit report
 Cached time: 20180105155224
@@ -72,10 +100,22 @@ Transclusion expansion time report (%,ms,calls,template)
 
 <!-- Saved in parser cache with key deena_mw_DW_KnowledgeBase:pcache:idhash:1-0!*!0!*!*!5!* and timestamp 20180105155224 and revision id 4388
  -->
-</div>					<div class="printfooter">
+</div>				
+
+	<div class="printfooter">
 						Retrieved from "<a dir="ltr" href="http://www.cs.nyu.edu/ArtistArchives/KnowledgeBase/index.php?title=Main_Page&amp;oldid=4388">http://www.cs.nyu.edu/ArtistArchives/KnowledgeBase/index.php?title=Main_Page&amp;oldid=4388</a>"					</div>
-				<div id='catlinks' class='catlinks'><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="https://cs.nyu.edu/ArtistArchives/KnowledgeBase/index.php/Special:Categories" title="Special:Categories">Category</a>: <ul><li><a href="./Category:About_Pages.html" title="Category:About Pages">About Pages</a></li></ul></div></div>				<div class="visualClear"></div>
-					<div id="footer" role="contentinfo">
+		 <div id="search-results">
+		 <div id="results-list" >
+		 </div>
+		 
+		 </div>
+		 
+		 <div class="center">
+		   <div class="pagination" id="pagination">
+		
+		   </div>
+		 </div>
+		 					<div id="footer" role="contentinfo">
 				<hr />
 							<ul id="footer-info">
 											<li id="footer-info-lastmod"> This page was last modified on 5 January 2018, at 10:52.</li>
@@ -200,13 +240,13 @@ Transclusion expansion time report (%,ms,calls,template)
 
 
 			--><div id="right-navigation">
-															 
-							<h5>
-								
-							</h5>
-					
-							 <div class="gcse-searchbox-only"></div></div>
-							 
+					</div>
+					<form id="search-box" action="http://localhost:3000/index.php/Search_Page.html" method="get" >
+
+		<input id='search-input' name="q" type="text">
+		<button type="submit">Send</button>
+		</form></div>
+
 							 
 							<div id="mw-panel">
 															<div class="portal" role="navigation" id='p-navigation' aria-labelledby='p-navigation-label'>
@@ -269,6 +309,107 @@ Transclusion expansion time report (%,ms,calls,template)
 mw.loader.state({"user":"ready","user.groups":"ready"});mw.loader.load(["mediawiki.action.view.postEdit","site","mediawiki.user","mediawiki.hidpi","mediawiki.page.ready","mediawiki.searchSuggest"]);
 } );</script><script>window.RLQ = window.RLQ || []; window.RLQ.push( function () {
 mw.config.set({"wgBackendResponseTime":381});
-} );</script>	</body>
+} );</script>	
+<script>
+
+var search_term = getParameterByName('q');
+var results = api_request(search_term, 0)
+listResults = results['items']
+result_length = results['searchInformation']['totalResults']
+
+if (result_length > 100){
+	result_length = 100;
+}
+paginate(result_length)
+
+count = (results['queries']['request'][0]['count'])
+search_blurb = document.createElement('p')
+search_blurb.innerHTML = result_length.toString() + " items"
+document.getElementById("firstHeading").appendChild(search_blurb)
+list = document.getElementById('results-list')
+
+populate_search_results(count, listResults, list)
+
+function paginate(result_length){
+	pagination = result_length / 10 
+	pagination = Math.floor(pagination)
+	pagination_length = document.getElementById('pagination')
+	for (j = 0; j < pagination; j++){
+		page = document.createElement('a')
+		page.href = ''
+		page.innerHTML = j+1
+		page.id = j
+		pagination_length.appendChild(page)
+		document.getElementById(j).addEventListener("click", populate_list);
+	}
+}
+
+function httpGet(theUrl){
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+function api_request(search_term, number){
+	var search_term = getParameterByName('q');
+	url = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyCsd7zDw2UEaqKT7Ole67cGnDkbWifm5Jo&cx=004565102959959190228:uwaxemsmufo&q='+ search_term + "&start=" + number
+	results = JSON.parse(httpGet(url))
+	return results
+}
+
+function clear () {
+	event.preventDefault()
+	while (document.getElementById('results-list').firstChild) {
+			 document.getElementById('results-list').removeChild(document.getElementById('results-list').firstChild);
+	 }
+ }
+ 
+function populate_search_results(number, listResults, list){
+	for (i = 0; i < number; i++) {
+		item = listResults[i]
+		title = item['title']
+		link = item['link']
+		snippet = item['snippet']
+
+	  list_item = document.createElement('div')
+		result_link = document.createElement('a')
+		result_link.innerHTML = title 
+		p_snippet = document.createElement('p')
+		p_snippet.innerHTML = snippet
+		br = document.createElement('br')
+
+		list_item.appendChild(result_link)
+		list_item.appendChild(p_snippet)
+		list_item.appendChild(br)
+
+		list.appendChild(list_item)
+	}
+} 
+
+function populate_list(){
+	number = (parseInt(this.id)*10)+1
+	clear();
+	results = api_request(url, number)
+	listResults = results['items']
+ 	result_length = results['searchInformation']['totalResults']
+	list = document.getElementById('results-list')
+	
+	count = (results['queries']['request'][0]['count'])
+	populate_search_results(count, listResults, list)
+}
+
+</script>
+</body>
 <!-- Cached 20180105173905 -->
 </html>
