@@ -312,36 +312,26 @@ mw.config.set({"wgBackendResponseTime":381});
 } );</script>	
 <script>
 
-var search_term = getParameterByName('q');
-var results = api_request(search_term, 0)
-listResults = results['items']
-result_length = results['searchInformation']['totalResults']
-
-if (result_length > 100){
-	result_length = 100;
-}
-paginate(result_length)
-
-count = (results['queries']['request'][0]['count'])
-search_blurb = document.createElement('p')
-search_blurb.innerHTML = result_length.toString() + " items"
-document.getElementById("firstHeading").appendChild(search_blurb)
-list = document.getElementById('results-list')
-
-populate_search_results(count, listResults, list)
-
 function paginate(result_length){
+	dict = {}
 	pagination = result_length / 10 
 	pagination = Math.floor(pagination)
-	pagination_length = document.getElementById('pagination')
-	for (j = 0; j < pagination; j++){
-		page = document.createElement('a')
-		page.href = ''
-		page.innerHTML = j+1
-		page.id = j
-		pagination_length.appendChild(page)
-		document.getElementById(j).addEventListener("click", populate_list);
+	last = false
+	j = 0
+	while (last == false) {
+		number = (parseInt(j)*10)+1
+		results = api_request(url, number)
+		listResults = results['items']
+		dict[j] = listResults
+		if (results['queries']['nextPage']){
+			last = false
+		}
+		else {
+			last = true
+		}
+		j+= 1
 	}
+	return dict
 }
 
 function httpGet(theUrl){
@@ -363,7 +353,7 @@ function getParameterByName(name, url) {
 
 function api_request(search_term, number){
 	var search_term = getParameterByName('q');
-	url = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyCsd7zDw2UEaqKT7Ole67cGnDkbWifm5Jo&cx=004565102959959190228:uwaxemsmufo&q='+ search_term + "&start=" + number
+	url = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyAvsP8vOTP-JySjJ_8rPPVjz6w5HWpAU1o&cx=fc52560f6e6a16e16&q='+ search_term + "&start=" + number
 	results = JSON.parse(httpGet(url))
 	return results
 }
@@ -398,7 +388,7 @@ function populate_search_results(number, listResults, list){
 } 
 
 function populate_list(){
-	number = (parseInt(this.id)*10)+1
+	number = (parseInt(id)*10)+1
 	clear();
 	results = api_request(url, number)
 	listResults = results['items']
@@ -408,6 +398,49 @@ function populate_list(){
 	count = (results['queries']['request'][0]['count'])
 	populate_search_results(count, listResults, list)
 }
+
+function populate_page(){
+	list = document.getElementById('results-list')
+	event.preventDefault()
+	clear()
+	populate_search_results(dict[this.id].length, dict[this.id], list)
+}
+
+function create_paginate(results_total){
+	number = Math.floor(results_total/10)
+	pagination_length = document.getElementById('pagination')
+	for (i = 0; i <= number; i++) {
+		page = document.createElement('a')
+		page.href = ''
+		page.innerHTML = i+1
+		page.id = i
+		page.onclick = populate_page
+		pagination_length.appendChild(page)
+	}
+}
+
+var search_term = getParameterByName('q');
+var results = api_request(search_term, 0)
+listResults = results['items']
+result_length = results['searchInformation']['totalResults']
+
+if (result_length > 100){
+	result_length = 100;
+}
+
+dict = paginate(result_length)
+results_total = 0
+for (i = 0; i < Object.keys(dict).length; i++) {
+	results_total = results_total + dict[i].length
+}
+
+search_blurb = document.createElement('p')
+search_blurb.innerHTML = results_total.toString() + " items"
+document.getElementById("firstHeading").appendChild(search_blurb)
+list = document.getElementById('results-list')
+create_paginate(results_total)
+
+populate_search_results(dict[0].length, dict[0], list)
 
 </script>
 </body>
