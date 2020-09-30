@@ -313,25 +313,9 @@ mw.config.set({"wgBackendResponseTime":381});
 <script>
 
 function paginate(result_length){
-	dict = {}
 	pagination = result_length / 10 
-	pagination = Math.floor(pagination)
+	pagination = Math.round(pagination)
 	last = false
-	j = 0
-	while (last == false) {
-		number = (parseInt(j)*10)+1
-		results = api_request(url, number)
-		listResults = results['items']
-		dict[j] = listResults
-		if (results['queries']['nextPage']){
-			last = false
-		}
-		else {
-			last = true
-		}
-		j+= 1
-	}
-	return dict
 }
 
 function httpGet(theUrl){
@@ -353,7 +337,7 @@ function getParameterByName(name, url) {
 
 function api_request(search_term, number){
 	var search_term = getParameterByName('q');
-	url = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyAvsP8vOTP-JySjJ_8rPPVjz6w5HWpAU1o&cx=fc52560f6e6a16e16&q='+ search_term + "&start=" + number
+	url = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyAvsP8vOTP-JySjJ_8rPPVjz6w5HWpAU1o&cx=c78d651978f481a10&q='+ search_term + "&start=" + number
 	results = JSON.parse(httpGet(url))
 	return results
 }
@@ -365,45 +349,49 @@ function clear () {
 	 }
  }
  
-function populate_search_results(number, listResults, list){
-	for (i = 0; i < number; i++) {
-		item = listResults[i]
-		title = item['title']
-		link = item['link']
-		snippet = item['snippet']
+ function create_results(listResults, list){
+	 item = listResults[i]
+	 title = item['title']
+	 link = item['link']
+	 snippet = item['snippet']
 
-	  list_item = document.createElement('div')
-		result_link = document.createElement('a')
-		result_link.innerHTML = title 
-		p_snippet = document.createElement('p')
-		p_snippet.innerHTML = snippet
-		br = document.createElement('br')
+	 list_item = document.createElement('div')
+	 result_link = document.createElement('a')
+	 result_link.innerHTML = title 
+	 p_snippet = document.createElement('p')
+	 p_snippet.innerHTML = snippet
+	 br = document.createElement('br')
 
-		list_item.appendChild(result_link)
-		list_item.appendChild(p_snippet)
-		list_item.appendChild(br)
+	 list_item.appendChild(result_link)
+	 list_item.appendChild(p_snippet)
+	 list_item.appendChild(br)
 
-		list.appendChild(list_item)
+	 list.appendChild(list_item)
+ }
+ 
+function populate_search_results(dict, search_term, page, list){
+	if (dict[search_term][page] != undefined){
+		number = dict[search_term][page].length
+		for (i = 0; i < number; i++) {
+			create_results(dict[search_term][page], list)
+		}
+	}
+	else{
+		var search_term = getParameterByName('q');
+		var results = api_request(search_term, (page*10)+1)
+		dict[search_term][page] = results['items']
+		number = dict[search_term][page].length
+		for (i = 0; i < number; i++) {
+			create_results(dict[search_term][page], list)
+		}
 	}
 } 
-
-function populate_list(){
-	number = (parseInt(id)*10)+1
-	clear();
-	results = api_request(url, number)
-	listResults = results['items']
- 	result_length = results['searchInformation']['totalResults']
-	list = document.getElementById('results-list')
-	
-	count = (results['queries']['request'][0]['count'])
-	populate_search_results(count, listResults, list)
-}
 
 function populate_page(){
 	list = document.getElementById('results-list')
 	event.preventDefault()
 	clear()
-	populate_search_results(dict[this.id].length, dict[this.id], list)
+	populate_search_results(dict, search_term, this.id, list)
 }
 
 function create_paginate(results_total){
@@ -425,22 +413,15 @@ listResults = results['items']
 result_length = results['searchInformation']['totalResults']
 
 if (result_length > 100){
-	result_length = 100;
+	result_length = 90;
 }
+dict = {}
+dict[search_term] = {}
+dict[search_term][0] = listResults
+create_paginate(result_length)
 
-dict = paginate(result_length)
-results_total = 0
-for (i = 0; i < Object.keys(dict).length; i++) {
-	results_total = results_total + dict[i].length
-}
-
-search_blurb = document.createElement('p')
-search_blurb.innerHTML = results_total.toString() + " items"
-document.getElementById("firstHeading").appendChild(search_blurb)
 list = document.getElementById('results-list')
-create_paginate(results_total)
-
-populate_search_results(dict[0].length, dict[0], list)
+populate_search_results(dict, search_term, 0, list)
 
 </script>
 </body>
