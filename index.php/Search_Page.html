@@ -24,9 +24,7 @@ mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":!1,"wgName
  #right-navigation{
 	max-width: 300px; padding-top: 5px;
 }
-#search-input{ margin: 5px}
-</style>
-<style>
+
  #right-navigation{
 	max-width: 300px; padding-top: 5px;
 }
@@ -57,7 +55,17 @@ div#mw-panel {
   color: white;
   border: 1px solid #4CAF50;
 }
-
+#result_link{
+	color: blue;
+	font-size: 12pt;
+}
+#link_snippet{
+	color: green;
+	font-size: 10pt;
+}
+#result_snippet{
+	font-size: 10pt;
+}
 .pagination a:hover:not(.active) {background-color: #ddd;}
 </style>
 </head>
@@ -339,6 +347,7 @@ function api_request(search_term, number){
 	var search_term = getParameterByName('q');
 	url = 'https://www.googleapis.com/customsearch/v1?key=AIzaSyAvsP8vOTP-JySjJ_8rPPVjz6w5HWpAU1o&cx=c78d651978f481a10&q='+ search_term + "&start=" + number
 	results = JSON.parse(httpGet(url))
+	console.log(url)
 	return results
 }
 
@@ -354,18 +363,37 @@ function clear () {
 	 title = item['title']
 	 link = item['link']
 	 snippet = item['snippet']
+	 thumbnail = item['pagemap']['cse_thumbnail']
 
 	 list_item = document.createElement('div')
+
 	 result_link = document.createElement('a')
 	 result_link.innerHTML = title 
+	 result_link.id = 'result_link'
+	 result_link.appendChild(document.createElement('br'))
+	 
+	 link_snippet = document.createElement('a')
+	 link_snippet.innerHTML = link
+	 link_snippet.id = 'link_snippet'
+	 link_snippet.appendChild(document.createElement('br'))
+
 	 p_snippet = document.createElement('p')
 	 p_snippet.innerHTML = snippet
-	 br = document.createElement('br')
+	 p_snippet.id = 'result_snippet'
+	 
+	 thumbnail = document.createElement('img')
+	 if (thumbnail[0]['src'] != undefined){
+		 thumbnail.src = thumbnail[0]['src']
+		 thumbnail.height = thumbnail[0]['height']
+		 thumbnail.width = thumbnail[0]['width']
+	 }
 
 	 list_item.appendChild(result_link)
+	 list_item.appendChild(link_snippet)
 	 list_item.appendChild(p_snippet)
-	 list_item.appendChild(br)
-
+	 list_item.appendChild(thumbnail)
+	 list_item.appendChild(document.createElement('br'))
+	 
 	 list.appendChild(list_item)
  }
  
