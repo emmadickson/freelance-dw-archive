@@ -1,7 +1,7 @@
 import json
 
-formatted_pages = open('pages_formatted.js', 'w')
-pages = open('pages/pages.jsonl', 'r')
+formatted_pages = open('index.js', 'w')
+pages = open('resources/pages.jsonl', 'r')
 
 test = {}
 index = 0
@@ -11,5 +11,6 @@ for line in lines:
         json_line = json.loads(line)
         test[json_line['text']] = [json_line['url'], json_line['title']]
     index = index + 1
-
+formatted_pages.write("var index = ");
 formatted_pages.write(json.dumps(test))
+formatted_pages.write(";");

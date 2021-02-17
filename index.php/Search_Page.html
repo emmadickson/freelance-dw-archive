@@ -241,7 +241,7 @@ Transclusion expansion time report (%,ms,calls,template)
 
 			--><div id="right-navigation">
 					</div>
-					<form id="search-box" action="http://localhost:3000/index.php/Search_Page.html" method="get" >
+					<form id="search-box" action="http://localhost:8000/index.php/Search_Page.html" method="get" >
 
 		<input id='search-input' name="q" type="text">
 		<button type="submit">Send</button>
@@ -318,7 +318,6 @@ var search_term = getParameterByName('q');
 var results = []
 for (const [key, value] of Object.entries(index)) {
   if ( `${key}`.includes(search_term)){
-		console.log(key)
 		results.push({'url': value[0], 'text': key, 'title': value[1]})
 	}
 }
